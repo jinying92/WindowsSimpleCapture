@@ -1,6 +1,10 @@
 # Windows Simple Capture - 便携式截图工具
 
 一个轻量级的Windows截图工具，支持全屏和窗口截图功能。
+## 截图预览
+<img width="381" height="366" alt="企业微信截图_17557591348277" src="https://github.com/user-attachments/assets/899b44db-8a1d-4ee6-a4f3-4f47d9213753" />
+<img width="897" height="407" alt="企业微信截图_17557591713865" src="https://github.com/user-attachments/assets/c2faaca0-f03d-412b-8254-b668d7b12bde" />
+<img width="1086" height="687" alt="企业微信截图_17557591981443" src="https://github.com/user-attachments/assets/7af27f5f-a791-42de-aa57-f709d17227be" />
 
 ## 功能特性
 
