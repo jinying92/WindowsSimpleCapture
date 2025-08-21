@@ -1,0 +1,140 @@
+<Window x:Class="WindowsSimpleCapture.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Windows Simple Capture" Height="380" Width="400"
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        Background="#F8F9FA">
+    
+    <Window.Resources>
+        <!-- 按钮样式 -->
+        <Style x:Key="ModernButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="#007ACC"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" 
+                                CornerRadius="6" 
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                BorderBrush="{TemplateBinding BorderBrush}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#005A9E"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#004578"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <!-- 复选框样式 -->
+        <Style x:Key="ModernCheckBoxStyle" TargetType="CheckBox">
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="Margin" Value="0,3"/>
+        </Style>
+    </Window.Resources>
+    
+    <Border Background="White" CornerRadius="8" Margin="15" 
+            BorderThickness="1" BorderBrush="#E1E5E9">
+        <Border.Effect>
+            <DropShadowEffect Color="#000000" Opacity="0.1" 
+                            BlurRadius="10" ShadowDepth="2"/>
+        </Border.Effect>
+        
+        <Grid Margin="25">
+            <Grid.RowDefinitions>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="15"/>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="12"/>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="20"/>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="15"/>
+                 <RowDefinition Height="Auto"/>
+                 <RowDefinition Height="8"/>
+                 <RowDefinition Height="Auto"/>
+             </Grid.RowDefinitions>
+            
+            <!-- 标题 -->
+            <StackPanel Grid.Row="0" HorizontalAlignment="Center">
+                <TextBlock Text="📸 Windows截图工具" 
+                           FontSize="20" FontWeight="Bold" 
+                           HorizontalAlignment="Center" 
+                           Foreground="#2C3E50"/>
+                <Rectangle Height="2" Width="80" Fill="#007ACC" 
+                          Margin="0,8,0,0" HorizontalAlignment="Center"/>
+            </StackPanel>
+            
+            <!-- 选项区域 -->
+            <StackPanel Grid.Row="2" HorizontalAlignment="Center">
+                <CheckBox x:Name="TopMostCheckBox" 
+                          Content="🔝 窗口置于顶层" 
+                          Style="{StaticResource ModernCheckBoxStyle}"
+                          HorizontalAlignment="Center"
+                          Checked="TopMostCheckBox_Checked"
+                          Unchecked="TopMostCheckBox_Unchecked"/>
+                
+                <CheckBox x:Name="CopyToClipboardCheckBox" 
+                          Content="📋 自动复制到剪贴板" 
+                          Style="{StaticResource ModernCheckBoxStyle}"
+                          HorizontalAlignment="Center"
+                          IsChecked="True"/>
+            </StackPanel>
+            
+            <!-- 分隔线 -->
+            <Rectangle Grid.Row="4" Height="1" Fill="#E1E5E9" 
+                      Margin="20,0" HorizontalAlignment="Stretch"/>
+            
+            <!-- 截图按钮 -->
+            <StackPanel Grid.Row="6" Orientation="Horizontal" 
+                        HorizontalAlignment="Center">
+                <Button x:Name="FullScreenButton" 
+                        Content="🖥️ 截取全屏" 
+                        Style="{StaticResource ModernButtonStyle}"
+                        Width="140" Height="45"
+                        Margin="0,0,10,0"
+                        Click="FullScreenButton_Click"/>
+                <Button x:Name="WindowButton" 
+                        Content="🪟 截取窗口" 
+                        Style="{StaticResource ModernButtonStyle}"
+                        Width="140" Height="45"
+                        Margin="10,0,0,0"
+                        Click="WindowButton_Click"/>
+            </StackPanel>
+            
+            <!-- 状态信息 -->
+             <Border Grid.Row="8" Background="#F8F9FA" 
+                     CornerRadius="4" Padding="12,6">
+                 <TextBlock x:Name="StatusText" 
+                            Text="✅ 准备就绪" 
+                            FontSize="12" 
+                            HorizontalAlignment="Center" 
+                            Foreground="#6C757D"/>
+             </Border>
+             
+             <!-- 打开文件夹链接 -->
+             <TextBlock Grid.Row="10" HorizontalAlignment="Center">
+                 <Hyperlink x:Name="OpenFolderLink" 
+                           Click="OpenFolderLink_Click"
+                           TextDecorations="Underline">
+                     <Run Text="🖼️ 查看截图" 
+                          FontSize="12" 
+                          Foreground="#007ACC"/>
+                 </Hyperlink>
+             </TextBlock>
+         </Grid>
+     </Border>
+ </Window>
