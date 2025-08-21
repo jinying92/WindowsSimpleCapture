@@ -206,8 +206,24 @@ namespace WindowsSimpleCapture
                 Margin = new Thickness(10, 0, 0, 0)
             };
             
+            // 全选复选框
+            var selectAllCheckBox = new CheckBox
+            {
+                Content = "全选",
+                FontSize = 12,
+                Foreground = new SolidColorBrush(Color.FromRgb(0, 122, 204)),
+                VerticalAlignment = VerticalAlignment.Center,
+                Margin = new Thickness(15, 0, 0, 0),
+                Tag = screenshots // 将该分类的截图列表存储在Tag中
+            };
+            
+            // 全选复选框事件处理
+            selectAllCheckBox.Checked += (s, e) => SelectAllInCategory(screenshots, true);
+            selectAllCheckBox.Unchecked += (s, e) => SelectAllInCategory(screenshots, false);
+            
             titlePanel.Children.Add(titleText);
             titlePanel.Children.Add(countText);
+            titlePanel.Children.Add(selectAllCheckBox);
             ContentPanel.Children.Add(titlePanel);
             
             // 缩略图网格
@@ -223,6 +239,70 @@ namespace WindowsSimpleCapture
             }
             
             ContentPanel.Children.Add(thumbnailPanel);
+        }
+
+        private void SelectAllInCategory(List<ScreenshotInfo> categoryScreenshots, bool isSelected)
+        {
+            foreach (var screenshot in categoryScreenshots)
+            {
+                if (isSelected)
+                {
+                    // 添加到选中列表
+                    if (!selectedScreenshots.Contains(screenshot))
+                    {
+                        selectedScreenshots.Add(screenshot);
+                    }
+                }
+                else
+                {
+                    // 从选中列表移除
+                    selectedScreenshots.Remove(screenshot);
+                }
+                
+                // 更新对应的复选框状态
+                UpdateThumbnailCheckBox(screenshot, isSelected);
+            }
+            
+            UpdateSelectedCount();
+        }
+        
+        private void UpdateThumbnailCheckBox(ScreenshotInfo screenshot, bool isChecked)
+        {
+            // 遍历ContentPanel中的所有控件，找到对应的缩略图复选框
+            foreach (var child in ContentPanel.Children)
+            {
+                if (child is WrapPanel wrapPanel)
+                {
+                    foreach (var thumbnail in wrapPanel.Children)
+                    {
+                        if (thumbnail is Border border && border.Tag == screenshot)
+                        {
+                            // 在border中找到复选框
+                            var checkBox = FindCheckBoxInBorder(border);
+                            if (checkBox != null)
+                            {
+                                checkBox.IsChecked = isChecked;
+                            }
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+        
+        private CheckBox FindCheckBoxInBorder(Border border)
+        {
+            if (border.Child is Grid grid)
+            {
+                foreach (var child in grid.Children)
+                {
+                    if (child is CheckBox checkBox)
+                    {
+                        return checkBox;
+                    }
+                }
+            }
+            return null;
         }
 
         private void CreateThumbnail(ScreenshotInfo screenshot, WrapPanel parent)
@@ -475,6 +555,56 @@ namespace WindowsSimpleCapture
                 {
                     StatusText.Text = $"删除失败: {ex.Message}";
                 }
+            }
+        }
+
+        private void BatchDelete_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                if (allScreenshots.Count == 0)
+                {
+                    MessageBox.Show("没有可删除的截图！", "提示", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                var dialog = new BatchDeleteDialog(allScreenshots.ToList())
+                {
+                    Owner = this
+                };
+
+                if (dialog.ShowDialog() == true && dialog.IsConfirmed)
+                {
+                    int deletedCount = 0;
+                    foreach (var screenshot in dialog.ScreenshotsToDelete)
+                    {
+                        if (File.Exists(screenshot.FilePath))
+                        {
+                            File.Delete(screenshot.FilePath);
+                            allScreenshots.Remove(screenshot);
+                            
+                            // 如果该截图在选中列表中，也要移除
+                            if (selectedScreenshots.Contains(screenshot))
+                            {
+                                selectedScreenshots.Remove(screenshot);
+                            }
+                            
+                            deletedCount++;
+                        }
+                    }
+
+                    TotalCountText.Text = $"(共 {allScreenshots.Count} 张截图)";
+                    RefreshDisplay();
+                    UpdateSelectedCount();
+                    StatusText.Text = $"批量删除完成，共删除 {deletedCount} 张截图";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"批量删除操作异常: {ex.Message}");
+                Console.WriteLine($"异常堆栈跟踪: {ex.StackTrace}");
+                MessageBox.Show($"批量删除操作失败: {ex.Message}\n\n{ex.StackTrace}", "错误", MessageBoxButton.OK, MessageBoxImage.Error);
+                StatusText.Text = $"批量删除失败: {ex.Message}";
             }
         }
     }
