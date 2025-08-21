@@ -436,7 +436,7 @@ namespace WindowsSimpleCapture
                 var files = selectedScreenshots.Select(s => s.FilePath).ToArray();
                 var fileCollection = new System.Collections.Specialized.StringCollection();
                 fileCollection.AddRange(files);
-                System.Windows.Forms.Clipboard.SetFileDropList(fileCollection);
+                System.Windows.Clipboard.SetFileDropList(fileCollection);
                 
                 StatusText.Text = $"已复制 {selectedScreenshots.Count} 张截图到剪贴板";
             }
