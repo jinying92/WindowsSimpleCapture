@@ -11,9 +11,10 @@
     <AssemblyDescription>简单易用的Windows截图工具</AssemblyDescription>
     <AssemblyCompany>WindowsSimpleCapture</AssemblyCompany>
     <AssemblyProduct>Windows Simple Capture</AssemblyProduct>
-    <AssemblyCopyright>Copyright © 2024</AssemblyCopyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
 
   <ItemGroup>
